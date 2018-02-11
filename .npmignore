@@ -1,0 +1,13 @@
+.idea
+node_modules
+npm-debug.log
+nodemon.json
+
+/authority/
+/bin/
+/documents/
+/etc/
+/local/
+/lib/node_modules/
+/removed/
+/run/

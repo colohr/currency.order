@@ -1,0 +1,31 @@
+
+
+type Currency{
+    base_value: Decimal
+    base_code: ID
+    code: ID
+    convert(base: ID, value: Decimal, code: ID): Currency
+    format(type:CurrencyFormatType = code, type_value: ID): Text
+    formatting: CurrencyFormat
+    text: Text
+    value: Decimal
+}
+
+type CurrencyFormat{
+    code: ID
+    decimal_digits: Number
+    decimal_separator: Text
+    space_between_amount_and_symbol: TF
+    symbol: ID
+    symbol_on_left: TF
+    thousands_separator: Text
+}
+
+enum CurrencyFormatType{
+    code
+    locale
+}
+
+extend type Out{
+    currency(value: Decimal, code: ID): Currency
+}

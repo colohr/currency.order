@@ -1,0 +1,26 @@
+{
+  "name": "currency.order",
+  "version": "0.0.1",
+  "description": "Currency Order Tool",
+  "main": "package/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colohr/currency.order.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colohr/currency.order/issues"
+  },
+  "homepage": "https://github.com/colohr/currency.order#readme",
+  "dependencies": {
+    "currency-formatter": "^1.3.2",
+    "fxy": "^0.1.72"
+  }
+}
