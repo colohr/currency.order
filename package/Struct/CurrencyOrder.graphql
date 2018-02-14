@@ -1,31 +1,65 @@
-
-
-type Currency{
-    base_value: Decimal
-    base_code: ID
-    code: ID
-    convert(base: ID, value: Decimal, code: ID): Currency
-    format(type:CurrencyFormatType = code, type_value: ID): Text
-    formatting: CurrencyFormat
-    text: Text
-    value: Decimal
+#Input used to convert currencies to another currency
+input CurrencyConversion{
+    #Currency code converting to
+    to: ID!
+    #Value to convert
+    value: Decimal = 1.00
 }
 
+
+#Converted currency result
+type ConvertedCurrency{
+    #Formatted text for value
+    formatted: Text
+    #Currency code converte from
+    from: ID!
+    #Currency code converted to
+    to: ID!
+    #Convered value
+    value: Decimal!
+}
+
+#Details for formatting and converting global currencies
+type CurrencyDetails{
+    #Currency code
+    code: ID!
+    #Convert a value to this currency using the base exchange rate
+    convert(value: Decimal): ConvertedCurrency
+    #Currency rate is available for conversion
+    converts: TF!
+    #Exchange rate details used for conversions
+    exchange_rate: CurrencyExchangeRate
+    #Formatting information about currency
+    format: CurrencyFormat
+    #Convert a value of this currency to another convertible currency
+    to(conversion:CurrencyConversion!): ConvertedCurrency
+    #Value of 1 for this currency converted using the base exchange rate value
+    value: Decimal!
+}
+
+#Base exchange rate used to convert currencies
+type CurrencyExchangeRate{
+    #Currency code for base rate value
+    code: ID!
+    #Convert value to another convertible currency by code
+    to(conversion:CurrencyConversion!): ConvertedCurrency
+}
+
+#Information used to format a currency
 type CurrencyFormat{
+    #Currency code
     code: ID
+    #Number of decimals used to display the currecy
     decimal_digits: Number
+    #Symbol used to separate whole & decimal numbers in value
     decimal_separator: Text
+    #Currency format has a space separating its value & symbol
     space_between_amount_and_symbol: TF
+    #Symbol used to identify the currency
     symbol: ID
+    #Symbol is on the left of the currency value
     symbol_on_left: TF
+    #Symbol used to separate thousands of whole numbers
     thousands_separator: Text
 }
 
-enum CurrencyFormatType{
-    code
-    locale
-}
-
-extend type Out{
-    currency(value: Decimal, code: ID): Currency
-}

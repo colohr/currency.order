@@ -1,49 +1,41 @@
-const sxy = require('sxy')
-const fxy = require('fxy')
-const converter = require('./convert')
-const formatter = require('currency-formatter')
-
-class CurrencyFormat extends sxy.Point(__filename,'CurrencyFormat'){}
-
-class Currency{
-	static get codes(){ return formatter.currencies.map(item=>item.code) }
-	static format(code){ return new CurrencyFormat(formatter.currencies.filter(item=>item.code===code)[0]) }
-	static get formats(){ return formatter.currencies.map(code=>this.format(code)) }
-	constructor(base_code = 'EUR'){
-		this.base_code = base_code
-	}
-	async convert(input){
-		if(!fxy.is.data(input)) input = {}
-		let {base,value,code}= input
-		if(!code) code = 'USD'
-		const convert = await converter()
-		value = get_decimal_value(value)
-		console.dir(convert.rates,{colors:true,depth:5})
-		//if(base) new Currency(base).convert({value,code})
-		this.code = code
-		this.value =  convert.money(value).to(code)
-
-		return this
-	}
-	format(input){
-		if(!fxy.is.data(input)) input = {type:'code'}
-		let {type,type_value} = input
-		const option = {}
-		if(!type_value) type_value = this[type]
-		option[type] = type_value
-		return formatter.format(this.value,option)
-	}
-	get formatting(){ return this.constructor.format(this.code || this.base_code || 'USD') }
-	get text(){ return this.format() }
-	toString(){ return `${this.text}` }
+const bundle = require('../bundle')
+const Currency = {
+	get Conversion(){ return require('./CurrencyConversion') },
+	get Details(){ return require('./CurrencyDetails') },
+	get Format(){ return require('./CurrencyFormat') },
+	get ExchangeRate(){ return require('./CurrencyExchangeRate') }
 }
 
-//shared actions
-module.exports = Currency
+//exports
+module.exports = get_currency()
 
 //shared actions
-function get_decimal_value(value){
-	if(fxy.is.text(value)) value = parseFloat(value)
-	if(!fxy.is.number(value)) value = 0
-	return value
+function get_currency(){
+	return new Proxy(get_currency_details,{
+		get:get_value,
+		has:has_value
+	})
+	//shared actions
+	function get_value(o,field){
+		if(typeof field === 'string') {
+			if(field in Currency) return Currency[field]
+			else if(field.replace('Currency','') in Currency){
+				return Currency[field.replace('Currency','')]
+			}
+		}
+		let value = field in o ? o[field]:null
+		if(typeof value === 'function') value = value.bind(o)
+		return value
+	}
+	function has_value(o,field){ return field in Currency || field in o }
+}
+
+async function get_currency_details(code){
+	if(bundle.formatter.exists(code)){
+		const data = { code, converts: (await bundle.converter()).exists(code) }
+		if(data.converts) data.value = (await Currency.ExchangeRate.to({value:1,to:data.code})).value
+		else data.value = 1
+		return new Currency.Details(data)
+	}
+	return null
 }

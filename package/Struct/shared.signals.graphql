@@ -1,0 +1,25 @@
+fragment currency_details_complete on CurrencyDetails {
+    code
+    converts
+    exchange_rate {
+        ...currency_exchange_rate_complete
+    }
+    format {
+        ...currency_format_complete
+    }
+    value
+}
+
+fragment currency_exchange_rate_complete on CurrencyExchangeRate{
+    code
+}
+
+fragment currency_format_complete on CurrencyFormat {
+    code
+    decimal_digits
+    decimal_separator
+    space_between_amount_and_symbol
+    symbol
+    symbol_on_left
+    thousands_separator
+}

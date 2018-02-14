@@ -3,15 +3,9 @@ node_modules
 npm-debug.log
 nodemon.json
 
-/authority/
+/test/
 /bin/
-/documents/
 /etc/
-/local/
-/lib/node_modules/
 /removed/
-/package.pre/
-/run/
-/structs/**/removed/
-/site/**/removed/
+*/removed/
 
