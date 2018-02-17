@@ -1,16 +1,17 @@
 const http = require('https')
 const source_locator = 'https://api.fixer.io/latest'
 const rates = {
-	update(date){ return this.date !== date }
+	update(date){ return this.date !== date },
+	get data(){ return 'data_rates' in this ? this.data_rates:require('./converts') },
+	set data(data){ return this.data_rates = data }
 }
-get_rates().then(()=>{})
 
 //exports
 module.exports = get_rates
 
 //shared actions
 async function get_rates(){
-	if(is_expired()){
+	if(!rates.loading && is_expired()){
 		if('date' in rates) rates.last = rates.date
 		rates.data = await load_rates()
 		rates.date = new Date()
@@ -20,7 +21,6 @@ async function get_rates(){
 
 
 function load_rates(){
-	if(rates.loading) return rates
 	let data = ''
 	rates.loading = true
 	return new Promise((success,error)=>{

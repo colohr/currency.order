@@ -1,4 +1,4 @@
-fragment currency_details_complete on CurrencyDetails {
+fragment currency_details_complete on CurrencyDetails{
     code
     converts
     exchange_rate {
@@ -14,7 +14,7 @@ fragment currency_exchange_rate_complete on CurrencyExchangeRate{
     code
 }
 
-fragment currency_format_complete on CurrencyFormat {
+fragment currency_format_complete on CurrencyFormat{
     code
     decimal_digits
     decimal_separator

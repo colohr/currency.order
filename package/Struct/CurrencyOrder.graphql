@@ -63,3 +63,18 @@ type CurrencyFormat{
     thousands_separator: Text
 }
 
+#Location currency interface
+interface LocationBasedCurrency{
+    location_currency_conversion: LocationBasedCurrencyConversion!
+    location_value_for(code:ID = "EUR"): ConvertedCurrency!
+}
+
+#Location base for currency conversion data
+type LocationBasedCurrencyConversion{
+    #Currency code for the value to be converted
+    code: ID!
+    #Currency details
+    details: CurrencyDetails
+    #Target value in type to convert into new currency
+    value: Decimal!
+}

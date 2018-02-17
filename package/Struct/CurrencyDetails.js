@@ -4,19 +4,22 @@ const Format = require('./CurrencyFormat')
 class CurrencyDetails{
 	constructor(data){ Object.assign(this,data) }
 	convert({value}){
-		console.dir({value},{colors:true,depth:4})
 		const conversion = { to:this.code,  value:bundle.value(value) }
 		return this.exchange_rate.to(conversion)
 	}
+	get converts(){ return this.code in bundle.converts.rates || this.code === bundle.converts.base }
 	get format(){ return new Format(this.code) }
 	get exchange_rate(){ return require('./CurrencyExchangeRate') }
 	async to({conversion}){
 		if(!this.converts) return null
-		console.dir({conversion},{colors:true,depth:4})
 		if(conversion.to === this.code) return Conversion(this.code,conversion)
 		const converted = await convert(this,conversion)
 		if(converted) return Conversion(this.code,converted)
 		return null
+	}
+	async value(){
+		if(this.converts) return (await this.exchange_rate.to({value:1,to:this.code})).value
+		return 1
 	}
 }
 

@@ -6,6 +6,7 @@ const rates = require('./rates')
 //exports
 module.exports = {
 	converter,
+	get converts(){ return require('./converts') },
 	formatter,
 	rates,
 	value:get_decimal_value

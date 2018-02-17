@@ -3,7 +3,8 @@ const Currency = {
 	get Conversion(){ return require('./CurrencyConversion') },
 	get Details(){ return require('./CurrencyDetails') },
 	get Format(){ return require('./CurrencyFormat') },
-	get ExchangeRate(){ return require('./CurrencyExchangeRate') }
+	get ExchangeRate(){ return require('./CurrencyExchangeRate') },
+	get LocationBasedCurrency(){ return require('./LocationBasedCurrency') }
 }
 
 //exports
@@ -30,12 +31,6 @@ function get_currency(){
 	function has_value(o,field){ return field in Currency || field in o }
 }
 
-async function get_currency_details(code){
-	if(bundle.formatter.exists(code)){
-		const data = { code, converts: (await bundle.converter()).exists(code) }
-		if(data.converts) data.value = (await Currency.ExchangeRate.to({value:1,to:data.code})).value
-		else data.value = 1
-		return new Currency.Details(data)
-	}
-	return null
+function get_currency_details(code){
+	return bundle.formatter.exists(code) ? new Currency.Details({code}):null
 }
