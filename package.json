@@ -1,6 +1,6 @@
 {
   "name": "currency.order",
-  "version": "0.0.121",
+  "version": "0.0.122",
   "description": "Currency Order Tool",
   "main": "package/index.js",
   "repository": {

@@ -1,18 +1,19 @@
-fragment currency_details_complete on CurrencyDetails{
-    code
-    converts
-    exchange_rate {
-        ...currency_exchange_rate_complete
-    }
-    format {
-        ...currency_format_complete
-    }
+fragment converted_currency_complete on ConvertedCurrency{
+    formatted
+    from
+    to
     value
 }
 
-fragment currency_exchange_rate_complete on CurrencyExchangeRate{
+fragment currency_details_complete on CurrencyDetails{
     code
+    converts
+    exchange_rate { ...currency_exchange_rate_complete }
+    format { ...currency_format_complete }
+    value
 }
+
+fragment currency_exchange_rate_complete on CurrencyExchangeRate{ code }
 
 fragment currency_format_complete on CurrencyFormat{
     code
@@ -22,4 +23,15 @@ fragment currency_format_complete on CurrencyFormat{
     symbol
     symbol_on_left
     thousands_separator
+}
+
+fragment location_based_currency_complete on LocationBasedCurrency{
+    location_currency_conversion{ ...location_based_currency_conversion_complete }
+    location_value_for{ ...converted_currency_complete }
+}
+
+fragment location_based_currency_conversion_complete on LocationBasedCurrencyConversion{
+    code
+    details{ ...currency_details_complete }
+    value
 }
